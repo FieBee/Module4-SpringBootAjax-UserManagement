@@ -76,7 +76,13 @@ public class CustomerController {
     }
 
 
-    @DeleteMapping("/{id}")
+    @GetMapping("/delete/{id}")
+    public ModelAndView showDelete(@PathVariable Long id){
+        ModelAndView modelAndView = new ModelAndView("/customer/delete");
+        modelAndView.addObject("customer", customerService.findById(id));
+        return modelAndView;
+    }
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Customer> deleteCustomer(@PathVariable Long id){
         Optional<Customer> customerOptional = customerService.findById(id);
         if (!customerOptional.isPresent()){
