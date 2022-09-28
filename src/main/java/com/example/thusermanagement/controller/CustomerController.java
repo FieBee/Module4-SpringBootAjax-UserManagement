@@ -40,7 +40,7 @@ public class CustomerController {
 
 
 
-    @GetMapping("/{id}")
+    @GetMapping("/findById/{id}")
     public ResponseEntity<Customer> findById(@PathVariable Long id){
         Optional<Customer> customer =customerService.findById(id);
         if (!customer.isPresent()){
@@ -58,14 +58,21 @@ public class CustomerController {
         return new ResponseEntity<>(customerService.save(customer), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+
+    @GetMapping("/edit/{id}")
+    public ModelAndView showUpdate(@PathVariable Long id){
+        ModelAndView modelAndView = new ModelAndView("/customer/edit");
+        modelAndView.addObject("customer", customerService.findById(id));
+        return modelAndView;
+    }
+    @PutMapping("/edit/{id}")
     public ResponseEntity<Customer> updateCustomer(@PathVariable Long id,@RequestBody Customer customer){
         Optional<Customer> customerOptional = customerService.findById(id);
-        if (customerOptional.isPresent()){
-            customer.setId(customerOptional.get().getId());
-            return new ResponseEntity<>(customerService.save(customer),HttpStatus.OK);
+        if (!customerOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        customer.setId(customerOptional.get().getId());
+        return new ResponseEntity<>(customerService.save(customer),HttpStatus.OK);
     }
 
 
