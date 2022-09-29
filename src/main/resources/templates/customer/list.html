@@ -9,8 +9,8 @@
 
 <script>
     function getCustomer(customer) {
-        return `<tr><td >${customer.firstName}</td><td >${customer.lastName}</td>\` +
-                \`<td><a href="${customer.id}" onclick="showFormUpdate(this)">Edit</a></td>
+        return `<tr><td >${customer.firstName}</td><td >${customer.lastName}</td>
+                \<td><a href="${customer.id}" onclick="showFormUpdate(this)">Edit</a></td>
                 <td><a href="${customer.id}" onclick="deleteCustomer(this)">Delete</a></td></tr>`
     }
 
@@ -43,10 +43,15 @@
                         <td>Edit</td>
                         <td>Delete</td>
                     </tr>`;
-                for (let i = 0; i < data.length; i++) {
-                    content += getCustomer(data[i]);
+                if (data == null){
+                    document.getElementById("customerList").innerHTML = content;
+                }else {
+                    for (let i = 0; i < data.length; i++) {
+                        content += getCustomer(data[i]);
+                    }
+                    document.getElementById("customerList").innerHTML = content;
                 }
-                document.getElementById("customerList").innerHTML = content;
+
             }
         })
     }
@@ -113,10 +118,11 @@
                 'Content-Type': 'application/json'
             },
             type: "PUT",
-            url: `/customers/` + id,
+            url: `/customers/${id}`,
             data:JSON.stringify(customer),
-            success: function () {
-                successHandler();
+            success: function (data) {
+                console.log(data)
+                successHandle();
             }
         })
 
@@ -143,16 +149,17 @@
                 <td><input type="text" id="lastName" placeholder="Last Name"></td>
             </tr>
             <tr>
-                <td><input type="submit" value="Create" onclick="addNewCustomer() "></td>
+                <td><input id="create" type="submit" value="Create" onclick="addNewCustomer() "></td>
             </tr>
 
             <tr>
         </table>
-        <td><input type="submit" id="button" value="Update" onclick="updateCustomer() "></td>
+        <td><input type="submit" id="update" value="Update" onclick="updateCustomer() "></td>
         </tr>
     </form>
-    <table border="1px" id="customerList">
 
+
+    <table border="1px" id="customerList">
     </table>
 </table>
 </body>
