@@ -40,14 +40,14 @@ public class CustomerController {
 
 
 
-    @GetMapping("/findById/{id}")
-    public ResponseEntity<Customer> findById(@PathVariable Long id){
-        Optional<Customer> customer =customerService.findById(id);
-        if (!customer.isPresent()){
-            return new  ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(customer.get(),HttpStatus.OK);
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<Customer> findById(@PathVariable Long id){
+//        Optional<Customer> customer =customerService.findById(id);
+//        if (!customer.isPresent()){
+//            return new  ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//        return new ResponseEntity<>(customer.get(),HttpStatus.OK);
+//    }
 
     @GetMapping("/create")
     public ModelAndView showCreate(){
@@ -59,13 +59,13 @@ public class CustomerController {
     }
 
 
-    @GetMapping("/edit/{id}")
-    public ModelAndView showUpdate(@PathVariable Long id){
-        ModelAndView modelAndView = new ModelAndView("/customer/edit");
-        modelAndView.addObject("customer", customerService.findById(id));
-        return modelAndView;
-    }
-    @PutMapping("/edit/{id}")
+//    @GetMapping("/edit/{id}")
+//    public ModelAndView showUpdate(@PathVariable Long id){
+//        ModelAndView modelAndView = new ModelAndView("/customer/edit");
+//        modelAndView.addObject("customer", customerService.findById(id));
+//        return modelAndView;
+//    }
+    @PutMapping("/{id}")
     public ResponseEntity<Customer> updateCustomer(@PathVariable Long id,@RequestBody Customer customer){
         Optional<Customer> customerOptional = customerService.findById(id);
         if (!customerOptional.isPresent()) {
@@ -76,13 +76,13 @@ public class CustomerController {
     }
 
 
-    @GetMapping("/delete/{id}")
-    public ModelAndView showDelete(@PathVariable Long id){
-        ModelAndView modelAndView = new ModelAndView("/customer/delete");
-        modelAndView.addObject("customer", customerService.findById(id));
-        return modelAndView;
-    }
-    @DeleteMapping("/delete/{id}")
+//    @GetMapping("/delete/{id}")
+//    public ModelAndView showDelete(@PathVariable Long id){
+//        ModelAndView modelAndView = new ModelAndView("/customer/delete");
+//        modelAndView.addObject("customer", customerService.findById(id));
+//        return modelAndView;
+//    }
+    @DeleteMapping("/{id}")
     public ResponseEntity<Customer> deleteCustomer(@PathVariable Long id){
         Optional<Customer> customerOptional = customerService.findById(id);
         if (!customerOptional.isPresent()){

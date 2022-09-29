@@ -10,10 +10,26 @@
 <script>
     function getCustomer(customer) {
         return `<tr><td >${customer.firstName}</td><td >${customer.lastName}</td>\` +
-                \`<td><a href="/customers/edit/${customer.id}">Edit</a></td>
-                <td><a href="/customers/delete/${customer.id}">Delete</a></td></tr>`
+                \`<td><a href="${customer.id}" onclick="showFormUpdate(this)">Edit</a></td>
+                <td><a href="${customer.id}" onclick="deleteCustomer(this)">Delete</a></td></tr>`
     }
 
+
+    function deleteCustomer(element){
+        let id = element.getAttribute("href");
+        $.ajax({
+            type: "DELETE",
+            //tên API
+            url: `/customers/`+id,
+            //xử lý khi thành công
+            success: function (){
+                alert("ok")
+                successHandle()
+            }
+        });
+        //chặn sự kiện mặc định của thẻ
+        event.preventDefault();
+    }
 
     function successHandle() {
         $.ajax({
@@ -34,16 +50,107 @@
             }
         })
     }
-
     successHandle();
+
+
+    function showFormUpdate(element){
+        let id = element.getAttribute("href");
+        console.log(id);
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            type: "GET",
+            url: `/customers/`+id,
+            success: function (data) {
+                $('#id').attr('value',`${data.id}`)
+                $('#firstName').attr('value',`${data.firstName}`)
+                $('#lastName').attr('value',`${data.lastName}`)
+            }
+        })
+        event.preventDefault();
+    }
+
+
+
+    function addNewCustomer(){
+        let firstName = $('#firstName').val();
+        let lastName = $('#lastName').val();
+        let newCustomer = {
+            firstName: firstName,
+            lastName: lastName
+        }
+
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            type:"POST",
+            data: JSON.stringify(newCustomer),
+            url: "http://localhost:8080/customers",
+            success: function (){
+                alert("ok")
+                successHandle()
+            }
+        })
+        event.preventDefault();
+
+    }
+
+    function updateCustomer() {
+        let id = $('#id').val();
+        let firstName= $('#firstName').val();
+        let lastName = $('#lastName').val();
+        let customer={
+            firstName:firstName,
+            lastName:lastName
+        }
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            type: "PUT",
+            url: `/customers/` + id,
+            data:JSON.stringify(customer),
+            success: function () {
+                successHandler();
+            }
+        })
+
+        event.preventDefault();
+    }
 
 </script>
 
 <body>
-<a href="/customers/create">Create new customer</a>
-<br>
+
 <table border="1">
     <h1>Customer List</h1>
+    <form id="addCustomer">
+        <table>
+            <tr>
+                <td><input type="text" id="id" placeholder="id" hidden></td>
+            </tr>
+            <tr>
+                <td>FirstName:</td>
+                <td><input type="text" id="firstName" placeholder="First Name"></td>
+            </tr>
+            <tr>
+                <td>LastName:</td>
+                <td><input type="text" id="lastName" placeholder="Last Name"></td>
+            </tr>
+            <tr>
+                <td><input type="submit" value="Create" onclick="addNewCustomer() "></td>
+            </tr>
+
+            <tr>
+        </table>
+        <td><input type="submit" id="button" value="Update" onclick="updateCustomer() "></td>
+        </tr>
+    </form>
     <table border="1px" id="customerList">
 
     </table>
